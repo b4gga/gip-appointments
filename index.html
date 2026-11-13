@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Запись на приём к главному инженеру проекта Демьянову Илье Сергеевичу. АО Россети НТЦ.">
+  <meta name="color-scheme" content="light"><title>Запись к ГИП | Россети НТЦ</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.css">
+  <script src="./config.js"></script><script defer src="./pdf-lib.min.js"></script><script defer src="./fontkit.umd.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="./" aria-label="Главная"><span class="brand-mark">Р</span><span>РОССЕТИ<span class="brand-sub">НАУЧНО-ТЕХНИЧЕСКИЙ ЦЕНТР</span></span></a>
+    <div class="service-label">СЕРВИС ДЕПАРТАМЕНТА</div>
+    <nav aria-label="Основная навигация">
+      <button class="nav-item active" data-view="booking"><span class="nav-icon">01</span> Запись на приём</button>
+      <button class="nav-item" data-view="mine"><span class="nav-icon">02</span> Мои талоны</button>
+      <button class="nav-item" data-view="admin" id="admin-nav" hidden><span class="nav-icon">03</span> Расписание ГИП</button>
+    </nav>
+    <div class="side-bottom"><span class="small-label">ДЕПАРТАМЕНТ</span><p>Реализация проектов</p><div class="side-rule"></div><p class="side-muted">Внутренний сервис<br>АО «Россети НТЦ»</p></div>
+  </aside>
+  <div class="main-wrap">
+    <header class="topbar"><span>Электронная приёмная</span><div><span class="online-dot"></span><span id="account-label"></span><button id="logout" class="text-button" hidden>Выйти</button></div></header>
+    <main>
+      <div id="mode-banner" class="demo-banner" hidden>Демонстрационный режим. Записи сохраняются только в этом браузере. Для совместной работы подключите общую базу по инструкции.</div>
+      <div id="message" role="status" aria-live="polite" tabindex="-1" hidden></div>
+      <section id="login-view" hidden class="login-card">
+        <span class="eyebrow">ДОСТУП СОТРУДНИКОВ</span><h1>Вход в приёмную</h1><p>Используйте учётную запись, выданную администратором сервиса.</p>
+        <form id="login-form"><label>Электронная почта<input type="email" name="email" required autocomplete="username"></label><label>Пароль<input type="password" name="password" required autocomplete="current-password"></label><button class="primary" type="submit">Войти</button></form>
+        <p class="muted">Для получения доступа или смены пароля обратитесь к администратору.</p>
+      </section>
+      <div id="workspace" hidden>
+        <section class="intro"><div><span class="eyebrow">ДЕПАРТАМЕНТ РЕАЛИЗАЦИИ ПРОЕКТОВ</span><h1 id="page-title">Запись на приём</h1><p id="page-description">Выберите удобное время для обсуждения рабочего вопроса.</p></div><div class="timezone">МСК <span>UTC+3</span></div></section>
+        <section class="person-card"><div class="avatar" aria-hidden="true">ИД</div><div><span class="small-label">ГЛАВНЫЙ ИНЖЕНЕР ПРОЕКТА</span><h2>Демьянов Илья Сергеевич</h2><p>АО «Россети НТЦ»</p></div><div class="person-schedule"><strong>Пн–Пт · 09:00–18:00</strong><span>Перерыв 13:00–14:00 · Приём 20 минут</span></div></section>
+        <section id="booking-view">
+          <div class="booking-layout"><div class="calendar-panel panel">
+            <div class="panel-heading"><div><span class="step">ШАГ 1</span><h2>Дата и время</h2></div><label class="date-control"><span class="sr-only">Дата приёма</span><input type="date" id="date"></label></div>
+            <div id="days" class="days" aria-label="Ближайшие рабочие дни"></div>
+            <div class="slots-heading"><strong id="date-title"></strong><span class="legend"><i></i> Свободно <i class="busy-dot"></i> Занято</span></div>
+            <div id="slots" aria-live="polite"></div>
+            <p class="calendar-note">Время указано по Москве. Запись открыта на 30 дней вперёд.</p>
+          </div><aside class="form-panel panel"><span class="step">ШАГ 2</span><h2>Данные для записи</h2><div id="selected-slot" class="selection">Выберите время в расписании</div>
+            <form id="booking-form"><label>ФИО сотрудника<input name="full_name" required minlength="5" maxlength="120" autocomplete="name" placeholder="Иванов Иван Иванович"></label><label>Подразделение<input name="department" required maxlength="120" placeholder="Отдел или проектная группа"></label><label>Тема обращения<textarea name="topic" rows="3" required minlength="3" maxlength="500" placeholder="Кратко опишите вопрос"></textarea></label><button class="primary" id="book-button" disabled>Получить талон</button></form>
+            <p class="form-note">После подтверждения талон будет доступен в PDF. Свою запись можно отменить в разделе «Мои талоны».</p>
+          </aside></div>
+        </section>
+        <section id="mine-view" hidden><div class="section-bar"><h2>Ваши записи</h2><button class="secondary" id="refresh-mine">Обновить</button></div><div id="my-list"></div></section>
+        <section id="admin-view" hidden><div class="section-bar"><div><h2>Расписание на день</h2><p class="muted">Записи сотрудников и недоступные интервалы.</p></div><input type="date" id="admin-date" aria-label="Дата расписания"></div><div class="admin-block panel"><label>Закрыть время для записи<select id="block-slot"></select></label><label>Причина<input id="block-reason" maxlength="500" placeholder="Совещание, работа на объекте"></label><button id="block-button" class="secondary">Закрыть интервал</button></div><div id="admin-list"></div></section>
+      </div>
+      <footer><span>АО «Россети НТЦ»</span><span>Сервис записи на приём к ГИП</span></footer>
+    </main>
+  </div>
+</div>
+<dialog id="ticket-dialog"><div class="dialog-top"><span class="success-mark">Запись подтверждена</span><button id="close-dialog" class="text-button" aria-label="Закрыть">Закрыть</button></div><h2>Ваш талон на приём</h2><div id="ticket-details"></div><button id="download-ticket" class="primary">Скачать PDF</button><p class="muted">Сохраните талон или распечатайте его перед приёмом.</p></dialog>
+</body></html>
